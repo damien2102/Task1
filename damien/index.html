@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weather App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #6db3f2, #1e69de);
+      color: white;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      padding: 20px;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .weather-container {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 20px;
+      margin: 20px auto;
+      border-radius: 10px;
+      max-width: 400px;
+    }
+
+    input {
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      margin-right: 5px;
+      outline: none;
+    }
+
+    button {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      background: #ffdd57;
+      color: black;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+        background: #ffc107;
+    }
+
+    @media (max-width: 500px) {
+      input, button {
+        width: 100%;
+        margin-top: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>🌤 Weather App</header>
+
+  <div class="weather-container">
+    <input type="text" id="city" placeholder="Enter city name" />
+    <button onclick="getWeather()">Get Weather</button>
+
+    <div id="result" style="margin-top: 20px;"></div>
+  </div>
+
+  <script>
+    const apiKey = "YOUR_API_KEY"; // Get free key from openweathermap.org
+
+    async function getWeather() {
+      const city = document.getElementById("city").value;
+      if (!city) {
+        alert("Please enter a city name");
+        return;
+      }
+
+      try {
+        const res = await fetch(
+          https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric
+        );
+        const data = await res.json();
+
+        if (data.cod !== 200) {
+          document.getElementById("result").innerHTML = <p>❌ ${data.message}</p>;
+          return;
+        }
+
+        document.getElementById("result").innerHTML = `
+          <h2>${data.name}, ${data.sys.country}</h2>
+          <p>🌡 Temperature: ${data.main.temp}°C</p>
+          <p>💧 Humidity: ${data.main.humidity}%</p>
+          <p>🌬 Wind: ${data.wind.speed} m/s</p>
+          <p>☁ Weather: ${data.weather[0].description}</p>
+        `;
+      } catch (error) {
+        document.getElementById("result").innerHTML = <p>⚠ Error fetching data</p>;
+      }
+    }
+  </script>
+</body>
+</html>
